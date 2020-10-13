@@ -239,5 +239,6 @@ public class Settings extends SettingsActivity {
      * Activity for MediaControlsSettings
      */
     public static class MediaControlsSettingsActivity extends SettingsActivity {}
+    public static class ScreenshotSettingsActivity extends SettingsActivity { /* empty */ }
 
 }

@@ -33,6 +33,7 @@ import android.content.res.Resources.Theme;
 import android.graphics.drawable.Icon;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.os.UserManager;
 import android.text.TextUtils;
@@ -651,6 +652,10 @@ public class SettingsActivity extends SettingsBaseActivity
                 WifiDisplaySettings.isAvailable(this), isAdmin)
                 || somethingChanged;
 
+        somethingChanged = setTileEnabled(changedList, new ComponentName(packageName,
+                        Settings.ScreenshotSettingsActivity.class.getName()),
+                SystemProperties.get("ro.build.characteristics","null").equals("tablet"), isAdmin)
+                || somethingChanged;
         if (UserHandle.MU_ENABLED && !isAdmin) {
             // When on restricted users, disable all extra categories (but only the settings ones).
             final List<DashboardCategory> categories = mDashboardFeatureProvider.getAllCategories();
