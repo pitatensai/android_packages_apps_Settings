@@ -16,7 +16,7 @@
             android:persistent="true"
             android:title="@string/screen_switch" />
 
-        <ListPreference
+        <com.android.settings.HdmiListPreference
             android:defaultValue="2"
             android:entries="@array/hdmi_resolution_entries"
             android:entryValues="@array/hdmi_resolution_values"
@@ -38,7 +38,7 @@
             android:persistent="true"
             android:title="@string/screen_switch" />
 
-        <ListPreference
+        <com.android.settings.HdmiListPreference
             android:defaultValue="2"
             android:entries="@array/hdmi_resolution_entries"
             android:entryValues="@array/hdmi_resolution_values"

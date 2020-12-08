@@ -1,5 +1,6 @@
 package com.android.settings.display;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.content.IntentFilter;
 import android.hardware.display.DisplayManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.os.ServiceManager;
 import android.os.SystemProperties;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -26,6 +28,7 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceScreen;
 
 import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
+import com.android.settings.HdmiListPreference;
 import com.android.settings.R;
 import com.android.settings.SettingsPreferenceFragment;
 
@@ -65,11 +68,11 @@ public class HdmiSettings extends SettingsPreferenceFragment
     private ListPreference mSystemRotation;
     private PreferenceCategory mMainCategory;
     private SwitchPreference mMainSwitch;
-    private ListPreference mMainResolution;
+    private HdmiListPreference mMainResolution;
     private Preference mMainScale;
     private PreferenceCategory mAuxCategory;
     private SwitchPreference mAuxSwitch;
-    private ListPreference mAuxResolution;
+    private HdmiListPreference mAuxResolution;
     private Preference mAuxScale;
     private CheckBoxPreference mAuxScreenVH;
     private ListPreference mAuxScreenVHList;
@@ -81,6 +84,9 @@ public class HdmiSettings extends SettingsPreferenceFragment
     private DisplayManager mDisplayManager;
     private DisplayListener mDisplayListener;
     private IWindowManager mWindowManager;
+    private ProgressDialog mProgressDialog;
+    private static final int MSG_SHOW_PROGRESS_DIALOG = 0;
+    private static final int MSG_CANCEL_PROGRESS_DIALOG = 1;
     private DISPLAY_SHOW_SETTINGS mShowSettings = ONLY_SHOW_AUX;
 
     enum DISPLAY_SHOW_SETTINGS {
@@ -88,6 +94,36 @@ public class HdmiSettings extends SettingsPreferenceFragment
         ONLY_SHOW_AUX,
         DOUBLE_SHOW
     }
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (MSG_SHOW_PROGRESS_DIALOG == msg.what) {
+                if (null == mProgressDialog) {
+                    mProgressDialog = new ProgressDialog(getActivity());
+                    mProgressDialog.setMessage("...");
+                    mProgressDialog.setCanceledOnTouchOutside(true);
+                    mProgressDialog.setCancelable(true);
+                }
+                if (!mProgressDialog.isShowing()) {
+                    mProgressDialog.show();
+                }
+                Message message = new Message();
+                message.what = MSG_CANCEL_PROGRESS_DIALOG;
+                message.obj = msg.obj;
+                mHandler.sendMessageDelayed(message, msg.arg1);
+            } else if (MSG_CANCEL_PROGRESS_DIALOG == msg.what) {
+                if (null != mProgressDialog && mProgressDialog.isShowing()) {
+                    mProgressDialog.cancel();
+                }
+                if (KEY_MAIN_RESOLUTION.equals(msg.obj)) {
+                    mMainResolution.showClickDialogItem();
+                }else  if (KEY_AUX_RESOLUTION.equals(msg.obj)){
+                    mAuxResolution.showClickDialogItem();
+                }
+            }
+        }
+    };
 
     private final BroadcastReceiver HdmiListener = new BroadcastReceiver() {
         @Override
@@ -181,10 +217,20 @@ public class HdmiSettings extends SettingsPreferenceFragment
     @Override
     public void onResume() {
         super.onResume();
+        //showWaitingDialog(0, "");
         IntentFilter filter = new IntentFilter("android.intent.action.HDMI_PLUGGED");
         getContext().registerReceiver(HdmiListener, filter);
         refreshState();
         mDisplayManager.registerDisplayListener(mDisplayListener, null);
+    }
+
+    private void showWaitingDialog(long delayMillis, String control) {
+        Message message = new Message();
+        message.what = MSG_SHOW_PROGRESS_DIALOG;
+        message.arg1 = (int) delayMillis;
+        message.obj = control;
+        mHandler.removeMessages(message.what);
+        mHandler.sendMessage(message);
     }
 
     public void onPause() {
@@ -196,6 +242,11 @@ public class HdmiSettings extends SettingsPreferenceFragment
 
     public void onDestroy() {
         super.onDestroy();
+        mHandler.removeMessages(MSG_CANCEL_PROGRESS_DIALOG);
+        if (null != mProgressDialog && mProgressDialog.isShowing()) {
+            mProgressDialog.cancel();
+            mProgressDialog = null;
+        }
         Log.d(TAG, "onDestroy----------------");
     }
 
@@ -246,7 +297,7 @@ public class HdmiSettings extends SettingsPreferenceFragment
             }
             mMainSwitch.setOnPreferenceChangeListener(this);
             mMainCategory.removePreference(mMainSwitch);
-            mMainResolution = (ListPreference) findPreference(KEY_MAIN_RESOLUTION);
+            mMainResolution = (HdmiListPreference) findPreference(KEY_MAIN_RESOLUTION);
             mMainResolution.setOnPreferenceChangeListener(this);
             mMainResolution.setOnPreferenceClickListener(this);
             if (mMainDisplayInfo != null) {
@@ -278,7 +329,7 @@ public class HdmiSettings extends SettingsPreferenceFragment
             }
             mAuxSwitch.setOnPreferenceChangeListener(this);
             mAuxCategory.removePreference(mAuxSwitch);
-            mAuxResolution = (ListPreference) findPreference(KEY_AUX_RESOLUTION);
+            mAuxResolution = (HdmiListPreference) findPreference(KEY_AUX_RESOLUTION);
             mAuxResolution.setOnPreferenceChangeListener(this);
             mAuxResolution.setOnPreferenceClickListener(this);
             if (mAuxDisplayInfo != null) {
@@ -439,6 +490,8 @@ public class HdmiSettings extends SettingsPreferenceFragment
                 startActivity(screenScaleIntent);
             }
         } else if (preference == mMainResolution) {
+            Log.i(TAG, "onPreferenceClick mMainResolution");
+            showWaitingDialog(1500, KEY_MAIN_RESOLUTION);
             updateMainState();
         } else if (preference == mAuxScreenVHList) {
             String value = SystemProperties.get("persist.sys.rotation.einit", "0");
@@ -451,6 +504,7 @@ public class HdmiSettings extends SettingsPreferenceFragment
                 startActivity(screenScaleIntent);
             }
         } else if (preference == mAuxResolution) {
+            showWaitingDialog(1500, KEY_AUX_CATEGORY);
             updateAuxState();
         }
         return true;
@@ -458,15 +512,26 @@ public class HdmiSettings extends SettingsPreferenceFragment
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object obj) {
-        Log.i(TAG, "onPreferenceChange:" + obj);
         String key = preference.getKey();
-        Log.d(TAG, key);
+        Log.i(TAG, key +" onPreferenceChange:" + obj);
         if (preference == mMainResolution) {
             if (KEY_MAIN_RESOLUTION.equals(key)) {
                 if (obj.equals(mOldMainResolution))
                     return true;
                 int index = mMainResolution.findIndexOfValue((String) obj);
                 Log.i(TAG, "onMainPreferenceChange: index= " + index);
+                if (-1 == index) {
+                    Log.e(TAG, "onMainPreferenceChange: index=-1 start print");
+                    CharSequence[] temps = mMainResolution.getEntryValues();
+                    if (null == temps) {
+                        for (CharSequence temp : temps) {
+                            Log.i(TAG, "=======" + temp);
+                        }
+                    } else {
+                        Log.e(TAG, "mMainResolution.getEntryValues() is null, but set " + obj);
+                    }
+                    Log.e(TAG, "onMainPreferenceChange: index=-1 end print");
+                }
                 mMainDisplayInfo = getDisplayInfo(0);
                 if (mMainDisplayInfo != null) {
                     DrmDisplaySetting.setDisplayModeTemp(mMainDisplayInfo, index);
