@@ -504,7 +504,7 @@ public class HdmiSettings extends SettingsPreferenceFragment
                 startActivity(screenScaleIntent);
             }
         } else if (preference == mAuxResolution) {
-            showWaitingDialog(1500, KEY_AUX_CATEGORY);
+            showWaitingDialog(1500, KEY_AUX_RESOLUTION);
             updateAuxState();
         }
         return true;
