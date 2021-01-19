@@ -125,4 +125,11 @@
         android:title="@string/ethernet_settings_title"
         settings:useAdminDisabledSummary="true"
         settings:userRestriction="no_ethernet_settings" />
+    <Preference
+        android:fragment="com.android.settings.network.AdaptiveConnectivitySettings"
+        android:key="adaptive_connectivity"
+        android:title="@string/adaptive_connectivity_title"
+        android:summary="@string/summary_placeholder"
+        android:order="25"
+        settings:controller="com.android.settings.network.AdaptiveConnectivityPreferenceController"/>
 </PreferenceScreen>
