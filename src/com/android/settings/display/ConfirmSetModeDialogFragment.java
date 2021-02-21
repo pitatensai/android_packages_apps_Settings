@@ -63,7 +63,7 @@ public class ConfirmSetModeDialogFragment extends DialogFragment {
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
         stopTimeCount();
-        DrmDisplaySetting.confirmSaveDisplayMode(mDisplayInfo, mIsOk);
+        //DrmDisplaySetting.confirmSaveDisplayMode(mDisplayInfo, mIsOk);
         mListener.onDismiss(mIsOk);
         mIsOk = false;
     }
