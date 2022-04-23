@@ -243,7 +243,7 @@ public class DrmDisplaySetting {
             return;
         logd(" setMainMode 1");
         int[] mainTypes = (int[]) ReflectUtils.invokeMethod(rkDisplayOutputManager, "getIfaceList", new Class[]{int.class}, new Object[]{DISPLAY_TYPE_MAIN});
-        logd(" setMainMode 2");
+        logd(" setMainMode resolution=" + mode);
         if (mainTypes != null && mainTypes.length > 0) {
             logd(" setMainMode mode = " + mode);
             int currMainType = (Integer) ReflectUtils.invokeMethod(rkDisplayOutputManager, "getCurrentInterface", new Class[]{int.class}, new Object[]{DISPLAY_TYPE_MAIN});
@@ -253,7 +253,7 @@ public class DrmDisplaySetting {
     }
 
     private static String tmpSetAuxMode = null;
-    private static String curSetAuxMode = "1920x1080p60";
+    private static String curSetAuxMode = "Auto";
 
     public static DisplayInfo getAuxDisplayInfo() {
         Object rkDisplayOutputManager = null;
@@ -331,7 +331,7 @@ public class DrmDisplaySetting {
             return;
         logd(" setAuxMode 1");
         int[] mainTypes = (int[]) ReflectUtils.invokeMethod(rkDisplayOutputManager, "getIfaceList", new Class[]{int.class}, new Object[]{DISPLAY_TYPE_AUX});
-        logd(" setAuxMode 2");
+        logd(" setAuxMode resolution=" + reso);
         if (mainTypes != null && mainTypes.length > 0) {
             int currMainType = (Integer) ReflectUtils.invokeMethod(rkDisplayOutputManager, "getCurrentInterface", new Class[]{int.class}, new Object[]{DISPLAY_TYPE_AUX});
             ReflectUtils.invokeMethod(rkDisplayOutputManager, "setMode", new Class[]{int.class, int.class, String.class}, new Object[]{DISPLAY_TYPE_AUX, currMainType, reso});

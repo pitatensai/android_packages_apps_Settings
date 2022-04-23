@@ -14,6 +14,7 @@ public class DisplayInfo implements Serializable {
     private String description;
     private String[] modes;
     private String[] orginModes;
+    private String currentResolution;
 
     public int getDisplayId() {
         return displayId;
@@ -53,6 +54,14 @@ public class DisplayInfo implements Serializable {
 
     public void setOrginModes(String[] orginModes) {
         this.orginModes = orginModes;
+    }
+
+    public String getCurrentResolution() {
+        return currentResolution;
+    }
+
+    public void setCurrentResolution(String currentResolution) {
+        this.currentResolution = currentResolution;
     }
 
     @Override
