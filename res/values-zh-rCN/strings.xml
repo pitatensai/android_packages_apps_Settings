@@ -4971,4 +4971,12 @@
     <string name="bluetooth_phonebook_access_notification_content" msgid="4280361621526852063">"不受信任的设备想要访问您的通讯录和通话记录。点按可了解详情。"</string>
     <string name="bluetooth_phonebook_access_dialog_title" msgid="7624607995928968721">"要允许访问通讯录和通话记录吗？"</string>
     <string name="bluetooth_phonebook_access_dialog_content" msgid="4766700015848574532">"不受信任的蓝牙设备“<xliff:g id="DEVICE_NAME_0">%1$s</xliff:g>”想要访问您的通讯录和通话记录，包括有关来电和去电的数据。\n\n您之前没有连接过“<xliff:g id="DEVICE_NAME_1">%2$s</xliff:g>”。"</string>
+
+    <!--screen shot-->
+    <string name="app_name">截屏管理器</string>
+    <string name="screenshot_manager">截屏</string>
+    <string name="screenshot_delay_title">延时截屏设置 </string>
+    <string name="screenshot_show">在状态栏上显示截屏按钮</string>
+    <string name="screenshot_version">截屏管理器版本</string>
+    <string name="later">秒以后截屏</string>
 </resources>
