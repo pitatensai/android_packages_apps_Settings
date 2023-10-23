@@ -3462,15 +3462,6 @@
                        android:value="com.android.settings.sound.MediaControlsSettings" />
         </activity>
 
-        <receiver
-            android:name=".media.BluetoothPairingReceiver"
-            android:exported="true"
-            android:permission="android.permission.BLUETOOTH_ADMIN">
-            <intent-filter>
-                <action android:name="com.android.settings.action.LAUNCH_BLUETOOTH_PAIRING"/>
-            </intent-filter>/>
-        </receiver>
-
         <!-- HDMI -->
         <activity android:name="Settings$HdmiSettingsActivity"
             android:label="@string/hdmi_settings"
@@ -3488,6 +3479,15 @@
         </activity>
 
         <activity android:name="com.android.settings.display.ScreenScaleActivity"/>
+
+        <receiver
+            android:name=".media.BluetoothPairingReceiver"
+            android:exported="true"
+            android:permission="android.permission.BLUETOOTH_ADMIN">
+            <intent-filter>
+                <action android:name="com.android.settings.action.LAUNCH_BLUETOOTH_PAIRING"/>
+            </intent-filter>/>
+        </receiver>
 
         <!-- This is the longest AndroidManifest.xml ever. -->
     </application>

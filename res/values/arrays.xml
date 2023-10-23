@@ -1350,8 +1350,6 @@
     </string-array>
 
     <string-array name="preferred_network_mode_values_world_mode" translatable="false">
-        <item>"10"</item>
-        <item>"8"</item>
         <item>"9"</item>
     </string-array>
 
@@ -1565,6 +1563,7 @@
 
     <!-- HDMI -->
     <string-array name="hdmi_resolution_entries">
+        <item>Auto </item>
         <item>1920x1080p-50Hz </item>
         <item>1920x1080p-60Hz</item>
         <item>1280x720p-50Hz</item>
@@ -1573,6 +1572,7 @@
         <item>720x480p-60Hz </item>
     </string-array>
     <string-array name="hdmi_resolution_values">
+        <item>Auto\n</item>
         <item>1920x1080p-50\n</item>
         <item>1920x1080p-60\n</item>
         <item>1280x720p-50\n</item>

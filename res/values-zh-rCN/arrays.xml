@@ -560,10 +560,6 @@
     <item msgid="611069084780684089">"NR/LTE/TDSCDMA/GSM/WCDMA"</item>
     <item msgid="5790800263975092724">"NR/LTE/TDSCDMA/CDMA/EvDo/GSM/WCDMA"</item>
   </string-array>
-  <string-array name="cdma_subscription_choices">
-    <item msgid="6242790734457941014">"RUIM/SIM"</item>
-    <item msgid="8980776035119085660">"NV"</item>
-  </string-array>
     <!-- no translation found for enhanced_4g_lte_mode_title_variant:0 (1841976293698111057) -->
     <!-- no translation found for enhanced_4g_lte_mode_title_variant:1 (6822859933189908133) -->
     <!-- no translation found for enhanced_4g_lte_mode_title_variant:2 (4543171628914168621) -->
